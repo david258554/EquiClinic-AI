@@ -86,3 +86,26 @@ def decision_tree_clasify(age, bmi, gender, symptom_severity):
                 return "Medium Risk"
             else:
                 return "Low Risk"
+            
+
+# bias detection
+def demographic_parity_bias_detection(results_by_gender, threshold=0.10):
+    """Demographic parity bias detection"""
+    male_high_risk = results_by_gender.get("Male", {}).get("High Risk", 0)
+    male_total = results_by_gender.get("Male", {}).get("Total", 1)
+    female_high_risk = results_by_gender.get("Female", {}).get("High Risk", 0)
+    female_total = results_by_gender.get("Female", {}).get("Total", 1)
+
+    male_rate = male_high_risk / male_total if male_total > 0 else 0
+    female_rate = female_high_risk / female_total if female_total > 0 else 0
+
+    disparity = abs(male_rate - female_rate)
+
+    return {
+        "male_high_risk_rate": male_rate,
+        "female_high_risk_rate": female_rate,
+        "bias_score": disparity,
+        "threshold": threshold,
+        "bias_detected": disparity > threshold
+    }
+
