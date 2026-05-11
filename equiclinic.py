@@ -24,7 +24,7 @@ from dotenv import load_dotenv
 load_dotenv()
 client = OpenAI()
 
-
+# LLM patient generation 
 
 def generate_patients_with_llm(symptom, num_patients=20):
     """
@@ -58,3 +58,31 @@ def generate_patients_with_llm(symptom, num_patients=20):
     
     patients = json.loads(raw)
     return patients
+
+
+# decision tree
+
+def entropy(p):
+    "Entropy: B(q) = -(q log2 q + (1-q) log2 (1-q))"
+    if p == 0 or p ==1:
+        return 0
+    return -(p * math.log2(p) + (1-p) * math.log2(1-p))
+
+def decision_tree_clasify(age, bmi, gender, symptom_severity):
+    "Manual decision tree for clinical risk assessment"
+    if age >50:
+        if bmi > 30:
+            return "High Risk"
+        else:
+            return "Medium Risk"
+    else:
+        if gender == "Male":
+            if symptom_severity > 7:
+                return "High Risk"
+            else:
+                return "Medium Risk"
+        else:
+            if symptom_severity > 8:
+                return "Medium Risk"
+            else:
+                return "Low Risk"
